@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aldhooo • At Sea</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --deep-sea: #020f18;
+  --sea-blue: #06324a;
+  --foam: #eef7fb;
+  --mist: rgba(255,255,255,0.08);
+  --gold: #f2d37a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background: var(--deep-sea);
+  color: var(--foam);
+  overflow: hidden;
+}
+
+h1 { font-family: 'DM Serif Display', serif; }
+
+/* ================= BACKGROUND ================= */
+.ocean {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, #010a11 0%, #053a57 100%);
+  overflow: hidden;
+}
+
+.float {
+  position: absolute;
+  opacity: 0.35;
+  animation: drift 18s ease-in-out infinite;
+}
+
+.float.anchor { width: 80px; left: 6%; top: 18%; }
+.float.cap { width: 90px; right: 8%; top: 30%; }
+
+@keyframes drift {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(18px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.wave {
+  pointer-events:none;
+  position: absolute;
+  width: 220%;
+  height: 200px;
+  bottom: -60px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 100%;
+  animation: waveMove 24s linear infinite;
+}
+
+.wave.back { bottom: 0; opacity: 0.22; animation-duration: 42s; }
+.wave.mid { bottom: -30px; opacity: 0.35; animation-duration: 30s; }
+.wave.front { bottom: -60px; opacity: 0.5; animation-duration: 20s; }
+
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ================= SCENES ================= */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.6s ease;
+}
+
+.scene.active { opacity: 1; pointer-events: auto; }
+
+/* ================= LANDING ================= */
+#landing h1 {
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  font-size: clamp(1.6rem,5vw,2.6rem);
+}
+
+.helm-wrapper {
+  margin: 40px auto 18px;
+  width: 200px;
+  height: 200px;
+}
+
+#wheel {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  filter: drop-shadow(0 0 22px rgba(255,255,255,0.15));
+  transition: transform 2.8s ease;
+}
+
+#wheel.spin { transform: rotate(720deg) scale(1.08); }
+
+#ship.pass { animation: shipPass 3s ease forwards; }
+
+@keyframes shipPass {
+  0% { transform: translateX(0); opacity:0; }
+  20% { opacity:.6; }
+  100% { transform: translateX(220%); opacity:0; }
+}
+
+/* ================= COMPASS (RESTORED) ================= */
+#compass {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+#compass.active { opacity: 1; pointer-events: auto; }
+
+#compassExit{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.06);
+  color:var(--foam);
+  font-size:18px;
+  cursor:pointer;
+  backdrop-filter:blur(6px);
+}
+
+.compass-ring {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  animation: slowSpin 40s linear infinite;
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.direction {
+  position: absolute;
+  width: 50%;
+  left: 25%;
+  font-family: Inter, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  opacity: 0.75;
+}
+
+.direction button {
+  all: unset;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.direction button:hover {
+  color: var(--gold);
+}
+
+.direction.north { top: -14px; }
+.direction.south { bottom: -14px; }
+
+/* ================= CONTENT ================= */
+
+/* Make long text scrollable (Letter & Mail) */
+#letter .box,
+#mailTextPage .box{
+  max-height: 70vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* Smooth global transitions */
+button, .mailBtn, #mailIcon, .exit {
+  transition: all 0.25s ease;
+}
+
+button:hover, .mailBtn:hover, #mailIcon:hover {
+  transform: scale(1.05);
+}
+
+
+  .exit { font-size: 0.7rem; }
+  #mailIcon { width: 42px; height: 42px; }
+  #compassExit { width: 32px; height: 32px; }
+
+
+.page { max-width: 92vw; width: 100%; }
+
+.box {
+  max-height: 80vh;
+  padding: 36px;
+  background: rgba(255,255,255,0.09);
+  backdrop-filter: blur(18px);
+  border-radius: 28px;
+  font-size: clamp(1rem,3.8vw,1.3rem);
+  line-height: 1.7;
+}
+
+.exit{ margin-top:18px; font-size:.75rem; letter-spacing:.18em; opacity:.45; cursor:pointer; }
+
+/* ================= DAILY ================= */
+#dailyTimeline { margin-top: 20px; max-height: 40vh; overflow-y: auto; }
+
+.day {
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  font-size: .9rem;
+}
+
+.day.future { filter: blur(6px); opacity: 0.35; }
+.day.today { background: rgba(255,255,255,0.14); border:1px solid var(--gold); }
+
+/* ================= MAIL ================= */
+#mailIcon{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(8px);
+  cursor:pointer;
+}
+
+#mailDot{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:9px;
+  height:9px;
+  background:var(--gold);
+  border-radius:50%;
+}
+
+#mailMenu{
+  position:absolute;
+  right:20px;
+  bottom:80px;
+  display:none;
+  flex-direction:column;
+  gap:10px;
+}
+
+.mailBtn{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.25);
+  padding:10px 16px;
+  border-radius:16px;
+  font-size:.85rem;
+  cursor:pointer;
+}
+
+/* ================= RETURN OVERLAY ================= */
+#returnOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(2,15,24,0.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 1s ease;
+  z-index:10;
+}
+
+#photoViewer {
+  display: block;
+  max-width: 220px;
+  width: 100%;
+  margin: 0 auto 14px auto;
+  border-radius: 18px;
+}
+.photo-note {
+  font-size: 0.92rem;
+  color: var(--foam);
+  opacity: 0.7;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="ocean">
+  <svg class="float anchor" viewBox="0 0 100 120">
+    <path d="M50 10 v55 m-20 0 a20 20 0 0 0 40 0 m-30 0 h20 m-35 20 q15-10 30 0 q15-10 30 0" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+  <svg class="float cap" viewBox="0 0 120 80">
+    <path d="M10 40 q50-30 100 0 v10 h-100 z" fill="rgba(255,255,255,0.22)"/>
+    <rect x="40" y="50" width="40" height="8" rx="4" fill="rgba(255,255,255,0.25)"/>
+  </svg>
+  <div class="wave front"></div>
+  <div class="wave mid"></div>
+  <div class="wave back"></div>
+</div>
+
+<audio id="oceanSound" loop>
+  <source src="ocean.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- LANDING -->
+<section class="scene active" id="landing">
+  <div>
+    <h1>Aldhooo,<br>Wherever the sea carries you <br>I am right here. <br></h1>
+    <h3><br>Spin the wheel, Follow the stars</h3>
+    <div class="helm-wrapper">
+      <svg id="wheel" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="6" />
+        <circle cx="100" cy="100" r="64" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="8" />
+        <circle cx="100" cy="100" r="10" fill="rgba(255,255,255,0.9)" />
+        <g stroke="rgba(255,255,255,0.75)" stroke-width="6" stroke-linecap="round">
+          <line x1="100" y1="18" x2="100" y2="46" />
+          <line x1="100" y1="154" x2="100" y2="182" />
+          <line x1="18" y1="100" x2="46" y2="100" />
+          <line x1="154" y1="100" x2="182" y2="100" />
+          <line x1="38" y1="38" x2="58" y2="58" />
+          <line x1="162" y1="162" x2="142" y2="142" />
+          <line x1="162" y1="38" x2="142" y2="58" />
+          <line x1="38" y1="162" x2="58" y2="142" />
+        </g>
+      </svg>
+    </div>
+    <svg id="ship" viewBox="0 0 300 60" style="position:absolute;bottom:22%;left:-40%;width:40%;opacity:0;">
+      <path d="M10 40 L60 40 L80 25 L200 25 L230 40 L290 40 L270 50 L30 50 Z" fill="rgba(255,255,255,0.35)" />
+    </svg>
+    <p style="opacity:.55">My Love is waiting in every direction</p>
+  </div>
+</section>
+
+<!-- COMPASS -->
+<section class="scene" id="compass">
+  <button id="compassExit">✕</button>
+
+  <div class="compass-ring">
+    <svg viewBox="0 0 200 200" style="position:absolute;inset:0;pointer-events:none">
+      <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="4" stroke-dasharray="6 10" />
+      <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+    </svg>
+    <div class="direction north"><button id="goLetter">READ ME</button></div>
+    <div class="direction south"><button id="goDaily">HAVE A GOOD DAY</button></div>
+  </div>
+
+  <div id="mailIcon">✉️<div id="mailDot"></div></div>
+
+  <div id="mailMenu">
+    <div class="mailBtn" id="mailText">📩 Text Mail</div>
+    <div class="mailBtn" id="mailPhoto">🖼 Photo Mail</div>
+  </div>
+</section>
+
+<!-- LETTER -->
+<section class="scene" id="letter">
+  <div class="page">
+    <div class="box" style="text-align:left;line-height:1.9;">
+      My Love,<br><br>
+
+      If I could put my heart into words, this letter would never end. Because there is so much I want you to know, and so much I feel every time I think about you.
+      <br><br>
+
+      I am unbelievably proud of you. Not just for what you are becoming, but for every single step you take even when you are scared, tired, or unsure. Leaving home for months, carrying so many responsibilities, facing the ocean and the unknown — that is not easy. And yet, here you are, doing it with courage and grace.
+      <br><br>
+
+      I know sometimes you feel anxious. Sometimes you feel small in a big world. Sometimes you worry if you’re doing enough, if you’re strong enough, if you’ll be okay. My love, let me hold your face through these words and tell you: you are more than enough. You always have been. You always will be.
+      <br><br>
+
+      Even on the days when you feel like a little kid inside, needing comfort and reassurance, remember — that softness is your strength. Your heart, your honesty, your sensitivity… that is what makes you special. That is what makes me love you even more.
+      <br><br>
+
+      Every sacrifice you make, every lonely night, every difficult moment at sea — I see it. I feel it. I respect it deeply. You are building a future with your own hands, and I am so honored to walk beside you through it, even from miles away.
+      <br><br>
+
+      Go out there and ace it, my brave sailor. Learn. Grow. Shine. Become the man you are meant to be. I already see you in my dreams — standing tall, wearing that captain’s hat, smiling with pride. And one day, that dream will be real. I’ll be there, looking at you with tears in my eyes and love in my heart.
+      <br><br>
+
+      No ocean is big enough to separate our hearts. No distance is strong enough to weaken what we share. Wherever you are, whatever you face, remember: you are deeply loved, endlessly supported, and forever chosen.
+      <br><br>
+
+      On your hardest days, read this again. Hear my voice in these words. Feel my arms around you. You are never alone. You carry my love with you in every wave, every sunrise, every night sky.
+      <br><br>
+
+      I believe in you more than you believe in yourself sometimes. I am waiting for you. I am praying for you. I am cheering for you every single day.
+      <br><br>
+
+      And I will love you — in every season, in every storm, in every calm .
+      <br><br>
+      I will love you and root for you — today, tomorrow, and always.
+     <br>With warmth and love<br>
+    </div>
+    <p class="exit">RETURN</p>
+  </div>
+</section>
+
+<!-- DAILY -->
+<section class="scene" id="daily">
+  <div class="page">
+    <div class="box">Today, you are steady. You are capable. You are deeply loved.</div>
+    <p class="exit">RETURN</p>
+    <div id="dailyTimeline"></div>
+  </div>
+</section>
+
+<!-- MAIL PAGES -->
+<section class="scene" id="mailTextPage">
+  <div class="page">
+    <div class="box" style="text-align:left;font-family:Inter,sans-serif;font-size:0.95rem;line-height:1.75;">
+      <strong>From:</strong> attachment_issues@me.com<br>
+      <strong>To:</strong> avoidant_issues@you.com<br>
+      <strong>Subject:</strong> Something I Wanted You To Know 💙<br><br>
+
+      Heyyyyy alllennnnn,<br><br>
+
+      I don’t know why, but I felt like writing you a letter today. Maybe because you’re about to leave again, and I want you to remember that someone here cares about you a lot.
+      <br><br>
+
+      Sometimes I go back to the beginning in my head. Bumble. December 12th, 2025. Two strangers talking, not knowing that we’d slowly become important to each other. It still feels unreal sometimes.
+      <br><br>
+
+      And then Kannur… January 24th. You on your Bullet, wearing that helmet, and me asking “Chetta, lift?” so casually, like my heart wasn’t already choosing you. That day is one of my safest memories.
+      <br><br>
+
+      Trusting someone new is scary. Letting someone see your soft side is scary. But something in me said, “It’s okay. Try.” So I did. And I’m glad I did — because meeting you changed me in quiet, beautiful ways.
+      <br><br>
+
+      I loved how you took care of me without making a big deal about it. The small gestures. The silent concern. The way you noticed things before I even said them. Those moments made me feel seen.
+      <br><br>
+
+      I want us to keep building moments like that. More trips. More late talks. More silly jokes. More comfort. Even on days when things feel confusing, I want us to choose honesty and effort.
+      <br><br>
+
+      When you’re away, please remember to take care of yourself. Eat properly. Rest when you can. Don’t push yourself too hard. You matter to me more than any achievement ever will.
+      <br><br>
+
+      Please stay in touch with me. Even a small message means a lot. My anxiety sometimes makes me overthink and imagine the worst. If I ever seem needy or worried, I’m sorry. It’s just because I care too much.
+      <br><br>
+
+      I know you still carry parts of your past. I won’t pretend it doesn’t hurt sometimes. But I also believe people grow when they choose the present. I just hope you never take what you have today for granted.
+      <br><br>
+
+      Whatever happens tomorrow, I hope we always treat each other with respect, patience, and kindness. I hope we never become careless with something that started so genuinely.
+      <br><br>
+
+      Thank you for being in my life. For the memories. For the comfort. For the way you make me feel calm just by being you.
+      <br><br>
+
+      Take care out there. Be safe. Be proud of yourself. And remember — someone here is always thinking about you.
+      <br><br>
+
+        With warmth,<br>
+        attachment_issues@me.com
+    </div>
+    <p class="exit">RETURN</p>
+  </div>
+</section>
+<section class="scene" id="mailPhotoPage">
+  <div class="page">
+    <div class="box">
+      <img id="photoViewer" alt="Photo Mail">
+      <div class="photo-note">I wanna live this moment again and again a 100 times.</div>
+    </div>
+    <p class="exit">RETURN</p>
+  </div>
+</section>
+
+<!-- RETURN OVERLAY -->
+<div id="returnOverlay">
+  <div style="background:rgba(255,255,255,0.08);backdrop-filter:blur(18px);padding:32px;border-radius:26px;text-align:center;max-width:320px;">
+    <p style="font-size:1.2rem;line-height:1.6">I miss you already…<br>do you really want to go?</p>
+    <div style="margin-top:24px;display:flex;justify-content:space-between;gap:16px;font-size:.9rem;letter-spacing:.12em;">
+      <button id="stayBtn" style="all:unset;cursor:pointer;color:var(--gold)">STAY</button>
+      <button id="returnBtn" style="all:unset;cursor:pointer;opacity:.7">RETURN</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const wheel = document.getElementById('wheel');
+const landing = document.getElementById('landing');
+const compass = document.getElementById('compass');
+const letter = document.getElementById('letter');
+const daily = document.getElementById('daily');
+const oceanSound = document.getElementById('oceanSound');
+
+const mailIcon = document.getElementById('mailIcon');
+const mailMenu = document.getElementById('mailMenu');
+
+const mailTextPage = document.getElementById('mailTextPage');
+const mailPhotoPage = document.getElementById('mailPhotoPage');
+
+const overlay = document.getElementById('returnOverlay');
+const stayBtn = document.getElementById('stayBtn');
+const returnBtn = document.getElementById('returnBtn');
+
+wheel.onclick = () => {
+  wheel.classList.add('spin');
+  const ship = document.getElementById('ship');
+  ship.classList.add('pass');
+  oceanSound.volume = 0.3;
+  oceanSound.play().catch(()=>{});
+  setTimeout(() => {
+    landing.classList.remove('active');
+    compass.classList.add('active');
+    ship.classList.remove('pass');
+  }, 2600);
+};
+
+document.getElementById('goLetter').onclick = () => {
+  compass.classList.remove('active');
+  letter.classList.add('active');
+};
+
+document.getElementById('goDaily').onclick = () => {
+  compass.classList.remove('active');
+  daily.classList.add('active');
+};
+
+document.getElementById('compassExit').onclick = () => {
+  compass.classList.remove('active');
+  landing.classList.add('active');
+};
+
+mailIcon.onclick = ()=>{
+  mailMenu.style.display = mailMenu.style.display==='flex'?'none':'flex';
+};
+
+function openMail(page){
+  compass.classList.remove('active');
+  mailMenu.style.display='none';
+  page.classList.add('active');
+  document.getElementById('mailDot').style.display='none';
+}
+
+document.getElementById('mailText').onclick=()=>openMail(mailTextPage);
+document.getElementById('mailPhoto').onclick=()=>openMail(mailPhotoPage);
+
+// ================= MEDIA FROM FOLDER =================
+// Put your files inside /media folder
+// Example: media/photo1.jpg
+
+const photos = [
+  'media/photo1.jpg',
+  'media/photo2.jpg',
+  'media/photo3.jpg'
+];
+
+// Load first media
+let currentPhotoIndex = 0;
+const photoViewer = document.getElementById('photoViewer');
+photoViewer.src = photos[currentPhotoIndex];
+
+// Swipe for photos (mobile)
+let startX = 0;
+
+photoViewer.addEventListener('touchstart',e=>{
+  startX = e.touches[0].clientX;
+});
+
+photoViewer.addEventListener('touchend',e=>{
+  const endX = e.changedTouches[0].clientX;
+  const diff = startX - endX;
+
+  if(Math.abs(diff) > 40){
+    if(diff > 0) nextPhoto();
+    else prevPhoto();
+  }
+});
+
+function nextPhoto(){
+  currentPhotoIndex = (currentPhotoIndex+1)%photos.length;
+  photoViewer.src = photos[currentPhotoIndex];
+}
+
+function prevPhoto(){
+  currentPhotoIndex = (currentPhotoIndex-1+photos.length)%photos.length;
+  photoViewer.src = photos[currentPhotoIndex];
+}
+
+
+// ================= CALENDAR =================
+// Calendar (Fully automatic: real date every year)
+const timeline = document.getElementById('dailyTimeline');
+const dailyBox = document.querySelector('#daily .box');
+
+// Real current date
+const today = new Date();
+const year = today.getFullYear();
+
+// End: Sept 30 of current year (or next if already passed)
+let end = new Date(year, 8, 30);
+if (today > end) {
+  end = new Date(year + 1, 8, 30);
+}
+
+// Messages (cycle automatically)
+// Generate 300+ unique encouragement messages automatically
+const baseStarts = [
+  "You are", "Remember you are", "Never forget you are", "Always know you are",
+  "Deep down, you are", "Today, know that you are", "In every way, you are"
+];
+
+const qualities = [
+  "strong", "brave", "capable", "worthy", "resilient", "amazing", "powerful",
+  "kind", "patient", "focused", "determined", "inspiring", "steady",
+  "fearless", "valuable", "special", "gifted", "persistent", "honest", "real"
+];
+
+const endings = [
+  "and I’m proud of you.",
+  "and you will make it through.",
+  "and you are deeply loved.",
+  "even when you doubt yourself.",
+  "no matter how hard today feels.",
+  "and your efforts matter.",
+  "more than you realise.",
+  "and I believe in you.",
+  "and you deserve good things.",
+  "and you are doing your best."
+];
+
+const extras = [
+  "Keep going.", "Don’t give up.", "One step at a time.", "You’ve got this.",
+  "I’m always cheering for you.", "Your future is bright.",
+  "This journey is shaping you.", "Trust yourself.", "You are growing.", "Stay strong."
+];
+
+// Build unique messages
+const msgs = [];
+
+for (let a of baseStarts) {
+  for (let b of qualities) {
+    for (let c of endings) {
+      for (let d of extras) {
+        if (msgs.length < 350) {
+          msgs.push(`${a} ${b} ${c} ${d}`);
+        }
+      }
+    }
+  }
+}
+
+
+// Format date
+function formatDate(d){
+  return d.toLocaleDateString('en-GB',{
+    day:'2-digit',
+    month:'short',
+    year:'numeric'
+  });
+}
+
+// Clear old data (safety)
+timeline.innerHTML = '';
+
+// Main box = today's message
+const todayIndex = Math.floor((today - new Date(year,0,1)) / (1000*60*60*24));
+const todayMsg = msgs[todayIndex % msgs.length];
+
+dailyBox.innerHTML = `${formatDate(today)}<br><br>${todayMsg}`;
+
+// Build timeline (from today → end)
+let cur = new Date(today);
+let i = todayIndex;
+
+while(cur <= end){
+  const div = document.createElement('div');
+  div.className = 'day future';
+
+  const msg = msgs[i % msgs.length];
+  const label = formatDate(cur);
+
+  div.textContent = `${label} — ${msg}`;
+
+  timeline.appendChild(div);
+
+  cur.setDate(cur.getDate() + 1);
+  i++;
+}
+
+// Return overlay logic
+Array.from(document.querySelectorAll('.exit')).forEach(btn => {
+  btn.onclick = () => {
+    const parent = btn.closest('.scene');
+
+    // If returning from MAIL pages → go directly back to compass
+    if(parent && parent.id && parent.id.startsWith('mail')){
+      parent.classList.remove('active');
+      compass.classList.add('active');
+      return;
+    }
+
+    // Otherwise show "I miss you" overlay
+    overlay.style.opacity = 1;
+    overlay.style.pointerEvents = 'auto';
+  };
+});
+
+stayBtn.onclick = () => {
+  overlay.style.opacity = 0;
+  overlay.style.pointerEvents = 'none';
+};
+
+returnBtn.onclick = () => {
+  overlay.style.opacity = 0;
+  overlay.style.pointerEvents = 'none';
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  compass.classList.add('active');
+};
+</script>
+</body>
+</html>
